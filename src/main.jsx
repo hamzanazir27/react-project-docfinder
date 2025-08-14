@@ -6,13 +6,27 @@ import HeroSection from "./components/HeroSection";
 import TopDoctors from "./components/TopDoctors";
 import Reviews from "./components/Reviews";
 import Footer from "./components/Footer";
+import Layout from "./Layout";
+import {
+  createBrowserRouter,
+  createRoutesFromElements,
+  Route,
+  RouterProvider,
+} from "react-router-dom";
+import Home from "./pages/Home";
+
+const router = createBrowserRouter(
+  createRoutesFromElements(
+    <Route path="/" element={<Layout />}>
+      <Route path="" element={<Home />} />
+      {/* <Route path='about' element={<About />} /> */}
+      {/* <Route path='contact' element={<Contact />} /> */}
+    </Route>
+  )
+);
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
-    <Navbar />
-    <HeroSection />
-    <TopDoctors />
-    <Reviews />
-    <Footer />
+    <RouterProvider router={router} />
   </StrictMode>
 );
