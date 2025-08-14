@@ -15,13 +15,14 @@ import {
 } from "react-router-dom";
 import Home from "./pages/Home";
 import FindDoctor from "./pages/FindDoctor";
+import DocterRegistrationPage from "./pages/DocterRegistrationPage";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path="/" element={<Layout />}>
       <Route path="" element={<Home />} />
       <Route path="finddoctor" element={<FindDoctor />} />
-      {/* <Route path='contact' element={<Contact />} /> */}
+      <Route path="docterregistration" element={<DocterRegistrationPage />} />
     </Route>
   )
 );

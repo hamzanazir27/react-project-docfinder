@@ -42,9 +42,9 @@ function Links({ logedin }) {
       <NavLink to="finddoctor" className={navLinkClass}>
         Find Doctor
       </NavLink>
-      <a href="#" className={navLinkClass}>
+      <NavLink to="docterregistration" className={navLinkClass}>
         Register as Doctor
-      </a>
+      </NavLink>
       <a href="#" className={navLinkClass}>
         About
       </a>
