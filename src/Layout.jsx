@@ -7,7 +7,7 @@ function Layout() {
   return (
     <>
       <Navbar />
-      <HeroSection />
+      {/* <HeroSection /> */}
       <Outlet />
       <Footer />
     </>

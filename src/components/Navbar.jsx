@@ -36,12 +36,12 @@ function Links({ logedin }) {
 
   return (
     <div className="flex items-center space-x-2">
-      <a href="#" className={navLinkClass}>
+      <NavLink to="/" className={navLinkClass}>
         Home
-      </a>
-      <a href="#" className={navLinkClass}>
+      </NavLink>
+      <NavLink to="finddoctor" className={navLinkClass}>
         Find Doctor
-      </a>
+      </NavLink>
       <a href="#" className={navLinkClass}>
         Register as Doctor
       </a>

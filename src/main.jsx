@@ -14,12 +14,13 @@ import {
   RouterProvider,
 } from "react-router-dom";
 import Home from "./pages/Home";
+import FindDoctor from "./pages/FindDoctor";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path="/" element={<Layout />}>
       <Route path="" element={<Home />} />
-      {/* <Route path='about' element={<About />} /> */}
+      <Route path="finddoctor" element={<FindDoctor />} />
       {/* <Route path='contact' element={<Contact />} /> */}
     </Route>
   )
