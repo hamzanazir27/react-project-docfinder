@@ -133,14 +133,7 @@ function DoctorRegistration() {
   return (
     <div className="min-h-screen bg-orange-50">
       {/* Simple navbar (same as before) */}
-      <nav className="bg-white shadow-lg border-b-2 border-orange-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
-            <div className="text-2xl font-bold text-blue-600">HealthFinder</div>
-          </div>
-        </div>
-      </nav>
-
+      <div className="mt-12"></div>
       <div className="max-w-4xl mx-auto px-4 py-8">
         {success && (
           <div className="mb-8 bg-green-100 border border-green-400 text-green-700 px-6 py-4 rounded-lg">
