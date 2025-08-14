@@ -20,14 +20,18 @@ function HeroSection() {
             {/* Action Buttons - Glassy */}
             <div className="flex flex-col sm:flex-row gap-4">
               {/* Primary Action */}
-              <button className="relative overflow-hidden backdrop-blur-xl bg-blue-600/80 border border-white/40 text-white px-8 py-4 rounded-xl font-semibold text-lg transition-all duration-300 hover:bg-blue-600 hover:shadow-2xl hover:scale-105 transform shadow-lg ">
+              <a
+                href="/finddoctor"
+                className="relative overflow-hidden backdrop-blur-xl bg-blue-600/80 border border-white/40 text-white px-8 py-4 rounded-xl font-semibold text-lg transition-all duration-300 hover:bg-blue-600 hover:shadow-2xl hover:scale-105 transform shadow-lg "
+              >
                 Find Doctor
-              </button>
-
-              {/* Secondary Action */}
-              <button className="relative overflow-hidden backdrop-blur-xl bg-white/30 border border-black/10 text-gray-800 px-8 py-4 rounded-xl font-semibold text-lg transition-all duration-300 hover:bg-white/20 hover:shadow-xl hover:scale-105 transform shadow-lg ">
+              </a>
+              <a
+                href="/docterregistration"
+                className="relative overflow-hidden backdrop-blur-xl bg-white/30 border border-black/10 text-gray-800 px-8 py-4 rounded-xl font-semibold text-lg transition-all duration-300 hover:bg-white/20 hover:shadow-xl hover:scale-105 transform shadow-lg "
+              >
                 Register as Doctor
-              </button>
+              </a>
             </div>
 
             {/* Stats */}
