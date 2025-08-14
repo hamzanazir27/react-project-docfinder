@@ -164,7 +164,7 @@ function Footer() {
       </div>
 
       {/* Bottom Section */}
-      <div className="border-t border-[#EF873D] bg-white">
+      <div className="border-t border-[#EF873D] ">
         <div className="max-w-7xl mx-auto px-6 py-6">
           <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
             {/* Copyright */}
