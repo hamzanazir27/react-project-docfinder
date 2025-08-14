@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 function HeroSection() {
   return (
     <div className="min-h-screen pt-2" style={{ backgroundColor: "#FBE3D2" }}>
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 lg:ml-10 lg:mr-10 s:mt-10">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 s:mt-10 ">
         {/* Gap kam kar diya */}
         <div className="grid lg:grid-cols-2 gap-2 items-center">
           {/* Left Content (Text) */}
