@@ -19,12 +19,14 @@ import Home from "./pages/Home";
 import FindDoctor from "./pages/FindDoctor";
 import DocterRegistrationPage from "./pages/DocterRegistrationPage";
 import DoctorDetail from "./pages/DoctorDetail";
+import ContactPage from "./pages/ContactPage";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path="/" element={<Layout />}>
       <Route path="" element={<Home />} />
       <Route path="finddoctor" element={<FindDoctor />} />
+      <Route path="contact" element={<ContactPage />} />
       <Route path="docterregistration" element={<DocterRegistrationPage />} />
       <Route path="doctor/:id" element={<DoctorDetail />} />
     </Route>

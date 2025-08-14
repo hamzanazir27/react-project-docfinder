@@ -48,9 +48,9 @@ function Links({ logedin }) {
       <a href="#" className={navLinkClass}>
         About
       </a>
-      <a href="#" className={navLinkClass}>
+      <NavLink to="contact" className={navLinkClass}>
         Contact
-      </a>
+      </NavLink>
 
       {/* Auth Button */}
       <div className="ml-4 pl-4 border-l border-white/20">
