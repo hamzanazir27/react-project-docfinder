@@ -1,6 +1,14 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { loadDoctorsFromStorage } from "../store/doctorSlice";
 
 const FindDoctor = () => {
+  const dispatch = useDispatch();
+  const { doctors: registeredDoctors, loading } = useSelector(
+    (state) => state.doctors
+  );
+
   const [searchTerm, setSearchTerm] = useState("");
   const [filters, setFilters] = useState({
     city: "All Cities",
@@ -11,7 +19,13 @@ const FindDoctor = () => {
   });
   const [currentPage, setCurrentPage] = useState(1);
 
-  const doctors = [
+  // Load doctors from local storage on component mount
+  useEffect(() => {
+    dispatch(loadDoctorsFromStorage());
+  }, [dispatch]);
+
+  // Combine hardcoded doctors with registered doctors
+  const hardcodedDoctors = [
     {
       id: 1,
       name: "Dr. Aino Virtanen",
@@ -25,6 +39,11 @@ const FindDoctor = () => {
         "Experienced cardiologist specializing in heart disease prevention and treatment with modern diagnostic techniques.",
       image:
         "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=150&h=150&fit=crop&crop=face",
+      consultationFee: "$150",
+      availableHours: "Mon-Fri: 9:00 AM - 5:00 PM",
+      languages: "Finnish, English, Swedish",
+      achievements: "Board Certified Cardiologist, 15+ years experience",
+      services: "Heart disease prevention, Treatment, Consultation",
     },
     {
       id: 2,
@@ -39,6 +58,11 @@ const FindDoctor = () => {
         "Compassionate pediatrician with 15 years of experience in child healthcare and developmental medicine.",
       image:
         "https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=150&h=150&fit=crop&crop=face",
+      consultationFee: "$120",
+      availableHours: "Mon-Sat: 8:00 AM - 6:00 PM",
+      languages: "Finnish, English",
+      achievements: "Pediatric Board Certified, Child Development Specialist",
+      services: "Child healthcare, Vaccination, Development monitoring",
     },
     {
       id: 3,
@@ -53,6 +77,11 @@ const FindDoctor = () => {
         "Skin specialist focusing on both medical and cosmetic dermatology with advanced treatment methods.",
       image:
         "https://images.unsplash.com/photo-1594824204356-bb9e0e30d7eb?w=150&h=150&fit=crop&crop=face",
+      consultationFee: "$180",
+      availableHours: "Mon-Fri: 10:00 AM - 6:00 PM",
+      languages: "Finnish, English, German",
+      achievements: "Dermatology Specialist, Cosmetic Dermatology Certified",
+      services: "Skin treatment, Cosmetic procedures, Consultation",
     },
     {
       id: 4,
@@ -67,6 +96,11 @@ const FindDoctor = () => {
         "Sports medicine and orthopedic surgery specialist with expertise in modern rehabilitation techniques.",
       image:
         "https://images.unsplash.com/photo-1582750433449-648ed127bb54?w=150&h=150&fit=crop&crop=face",
+      consultationFee: "$200",
+      availableHours: "Mon-Fri: 8:00 AM - 4:00 PM",
+      languages: "Finnish, English",
+      achievements: "Orthopedic Surgery Specialist, Sports Medicine Certified",
+      services: "Orthopedic surgery, Sports injury treatment, Rehabilitation",
     },
     {
       id: 5,
@@ -81,6 +115,11 @@ const FindDoctor = () => {
         "Expert in neurological disorders with focus on migraine and epilepsy treatment using latest therapies.",
       image:
         "https://images.unsplash.com/photo-1551601651-2a8555f1a136?w=150&h=150&fit=crop&crop=face",
+      consultationFee: "$160",
+      availableHours: "Mon-Fri: 9:00 AM - 5:00 PM",
+      languages: "Finnish, English, Russian",
+      achievements: "Neurology Specialist, Epilepsy Treatment Expert",
+      services: "Neurological diagnosis, Migraine treatment, Epilepsy care",
     },
     {
       id: 6,
@@ -95,6 +134,13 @@ const FindDoctor = () => {
         "Mental health specialist providing comprehensive therapy and psychiatric care with personalized approaches.",
       image:
         "https://images.unsplash.com/photo-1607990281513-2c110a25bd8c?w=150&h=150&fit=crop&crop=face",
+      consultationFee: "$140",
+      availableHours: "Mon-Fri: 10:00 AM - 6:00 PM",
+      languages: "Finnish, English",
+      achievements:
+        "Psychiatry Board Certified, Cognitive Behavioral Therapy Specialist",
+      services:
+        "Mental health assessment, Therapy sessions, Psychiatric consultation",
     },
     {
       id: 7,
@@ -109,6 +155,12 @@ const FindDoctor = () => {
         "Young and dedicated cardiologist with focus on preventive cardiology and lifestyle medicine.",
       image:
         "https://images.unsplash.com/photo-1582750433449-648ed127bb54?w=150&h=150&fit=crop&crop=face",
+      consultationFee: "$130",
+      availableHours: "Mon-Fri: 9:00 AM - 5:00 PM",
+      languages: "Finnish, English, Swedish",
+      achievements: "Cardiology Resident, Preventive Medicine Focus",
+      services:
+        "Preventive cardiology, Lifestyle consultation, Basic treatment",
     },
     {
       id: 8,
@@ -123,8 +175,37 @@ const FindDoctor = () => {
         "Expert dermatologist specializing in skin cancer detection and advanced cosmetic procedures.",
       image:
         "https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=150&h=150&fit=crop&crop=face",
+      consultationFee: "$190",
+      availableHours: "Mon-Fri: 9:00 AM - 6:00 PM",
+      languages: "Finnish, English, German",
+      achievements: "Dermatology Specialist, Skin Cancer Detection Expert",
+      services:
+        "Skin cancer screening, Cosmetic procedures, Medical dermatology",
     },
   ];
+
+  // Transform registered doctors to match the expected format
+  const transformedRegisteredDoctors = registeredDoctors.map((doctor) => ({
+    id: doctor.id,
+    name: `Dr. ${doctor.personalInfo.firstName} ${doctor.personalInfo.lastName}`,
+    specialty: doctor.professionalInfo.specialty,
+    city: doctor.personalInfo.city,
+    gender: doctor.personalInfo.gender,
+    experience: doctor.professionalInfo.experience,
+    rating: doctor.rating || 0,
+    reviews: doctor.reviews || 0,
+    description:
+      doctor.additionalInfo.description ||
+      "Newly registered doctor. Profile details coming soon.",
+    image:
+      doctor.personalInfo.profileImage || "https://via.placeholder.com/150",
+    isRegistered: true,
+    status: doctor.status,
+    registrationDate: doctor.registrationDate,
+  }));
+
+  // Combine all doctors
+  const allDoctors = [...hardcodedDoctors, ...transformedRegisteredDoctors];
 
   const handleFilterChange = (filterType, value) => {
     setFilters((prev) => ({
@@ -135,7 +216,7 @@ const FindDoctor = () => {
   };
 
   const filteredDoctors = useMemo(() => {
-    return doctors.filter((doctor) => {
+    return allDoctors.filter((doctor) => {
       const matchesSearch =
         searchTerm === "" ||
         doctor.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -171,7 +252,7 @@ const FindDoctor = () => {
         matchesRating
       );
     });
-  }, [doctors, searchTerm, filters]);
+  }, [allDoctors, searchTerm, filters]);
 
   const doctorsPerPage = 4;
   const totalPages = Math.ceil(filteredDoctors.length / doctorsPerPage);
@@ -185,6 +266,16 @@ const FindDoctor = () => {
     setCurrentPage(page);
   };
 
+  // Get unique cities and specialties from all doctors for filters
+  const uniqueCities = [
+    "All Cities",
+    ...new Set(allDoctors.map((d) => d.city)),
+  ];
+  const uniqueSpecialties = [
+    "All Specialties",
+    ...new Set(allDoctors.map((d) => d.specialty)),
+  ];
+
   return (
     <div className="min-h-screen bg-orange-50 mt-12">
       <div className="max-w-7xl mx-auto px-4 py-8">
@@ -193,13 +284,47 @@ const FindDoctor = () => {
           setSearchTerm={setSearchTerm}
           filters={filters}
           onFilterChange={handleFilterChange}
+          cities={uniqueCities}
+          specialties={uniqueSpecialties}
         />
 
         <div className="mb-6 text-center">
           <p className="text-gray-600">
             Found {filteredDoctors.length} doctors matching your criteria
+            {registeredDoctors.length > 0 && (
+              <span className="ml-2 text-orange-600 font-medium">
+                ({registeredDoctors.length} newly registered)
+              </span>
+            )}
           </p>
         </div>
+
+        {loading && (
+          <div className="text-center py-8">
+            <div className="inline-flex items-center px-4 py-2 font-semibold leading-6 text-orange-600">
+              <svg
+                className="animate-spin -ml-1 mr-3 h-5 w-5 text-orange-600"
+                fill="none"
+                viewBox="0 0 24 24"
+              >
+                <circle
+                  className="opacity-25"
+                  cx="12"
+                  cy="12"
+                  r="10"
+                  stroke="currentColor"
+                  strokeWidth="4"
+                ></circle>
+                <path
+                  className="opacity-75"
+                  fill="currentColor"
+                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                ></path>
+              </svg>
+              Loading doctors...
+            </div>
+          </div>
+        )}
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
           {displayedDoctors.map((doctor) => (
@@ -207,7 +332,7 @@ const FindDoctor = () => {
           ))}
         </div>
 
-        {filteredDoctors.length === 0 && (
+        {filteredDoctors.length === 0 && !loading && (
           <div className="text-center py-12">
             <h3 className="text-xl font-semibold text-gray-700 mb-2">
               No doctors found
@@ -235,25 +360,9 @@ const SearchSection = ({
   setSearchTerm,
   filters,
   onFilterChange,
+  cities,
+  specialties,
 }) => {
-  const cities = [
-    "All Cities",
-    "Helsinki",
-    "Tampere",
-    "Turku",
-    "Oulu",
-    "Espoo",
-    "Vantaa",
-  ];
-  const specialties = [
-    "All Specialties",
-    "Cardiologist",
-    "Pediatrician",
-    "Dermatologist",
-    "Orthopedist",
-    "Neurologist",
-    "Psychiatrist",
-  ];
   const genders = ["All Genders", "Male", "Female"];
   const experiences = [
     "Any Experience",
@@ -370,6 +479,7 @@ const SearchSection = ({
 };
 
 const DoctorCard = ({ doctor }) => {
+  const navigate = useNavigate();
   const renderStars = (rating) => {
     return (
       <div className="flex items-center">
@@ -397,7 +507,19 @@ const DoctorCard = ({ doctor }) => {
   };
 
   return (
-    <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-6 hover:shadow-xl hover:scale-105 transition-all duration-300 group">
+    <div
+      className={`bg-white rounded-2xl shadow-lg border border-gray-100 p-6 hover:shadow-xl hover:scale-105 transition-all duration-300 group ${
+        doctor.isRegistered ? "ring-2 ring-orange-200" : ""
+      }`}
+    >
+      {doctor.isRegistered && (
+        <div className="absolute top-4 right-4">
+          <span className="bg-orange-100 text-orange-800 text-xs font-medium px-2.5 py-0.5 rounded-full">
+            New
+          </span>
+        </div>
+      )}
+
       <div className="flex items-center mb-4">
         <img
           src={doctor.image || "https://via.placeholder.com/150"}
@@ -409,6 +531,12 @@ const DoctorCard = ({ doctor }) => {
             {doctor.name}
           </h3>
           <p className="text-[#EF873D] font-medium">{doctor.specialty}</p>
+          {doctor.isRegistered && (
+            <p className="text-xs text-gray-500 mt-1">
+              Status: {doctor.status} • Registered:{" "}
+              {new Date(doctor.registrationDate).toLocaleDateString()}
+            </p>
+          )}
         </div>
       </div>
 
@@ -453,7 +581,10 @@ const DoctorCard = ({ doctor }) => {
         {doctor.description}
       </p>
 
-      <button className="w-full bg-[#EF873D] text-white py-3 rounded-xl font-medium hover:bg-orange-600 transition-colors shadow-md">
+      <button
+        onClick={() => navigate(`/doctor/${doctor.id}`)}
+        className="w-full bg-[#EF873D] text-white py-3 rounded-xl font-medium hover:bg-orange-600 transition-colors shadow-md"
+      >
         View Profile
       </button>
     </div>

@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { addDoctor, clearSuccess, clearError } from "../../store/doctorSlice";
 import StepIndicator from "./StepIndicator";
 import PersonalStep from "./steps/PersonalStep";
 import ProfessionalStep from "./steps/ProfessionalStep";
 import AdditionalStep from "./steps/AdditionalStep";
-import useDoctorStore from "../../hooks/useReduxLikeStore";
 
 const initialFormData = {
   personalInfo: {
@@ -35,10 +36,23 @@ const initialFormData = {
 };
 
 function DoctorRegistration() {
-  const { state, actions } = useDoctorStore();
+  const dispatch = useDispatch();
+  const { loading, success, error, doctors } = useSelector(
+    (state) => state.doctors
+  );
   const [formData, setFormData] = useState(initialFormData);
   const [currentStep, setCurrentStep] = useState(1);
   const [errors, setErrors] = useState({});
+
+  // Clear success message after 3 seconds
+  useEffect(() => {
+    if (success) {
+      const timer = setTimeout(() => {
+        dispatch(clearSuccess());
+      }, 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [success, dispatch]);
 
   const handleInputChange = (section, field, value) => {
     setFormData((prev) => ({
@@ -80,7 +94,7 @@ function DoctorRegistration() {
   const handlePrev = () => setCurrentStep((s) => s - 1);
   const handleSubmit = () => {
     if (validateStep(currentStep)) {
-      actions.addDoctor(formData);
+      dispatch(addDoctor(formData));
       setCurrentStep(1); // reset wizard
       setFormData(initialFormData);
     }
@@ -128,9 +142,15 @@ function DoctorRegistration() {
       </nav>
 
       <div className="max-w-4xl mx-auto px-4 py-8">
-        {state.success && (
+        {success && (
           <div className="mb-8 bg-green-100 border border-green-400 text-green-700 px-6 py-4 rounded-lg">
             Registration Successful!
+          </div>
+        )}
+
+        {error && (
+          <div className="mb-8 bg-red-100 border border-red-400 text-red-700 px-6 py-4 rounded-lg">
+            Error: {error}
           </div>
         )}
 
@@ -171,10 +191,10 @@ function DoctorRegistration() {
                 <button
                   type="button"
                   onClick={handleSubmit}
-                  disabled={state.loading}
+                  disabled={loading}
                   className="px-8 py-3 bg-orange-500 text-white rounded-lg hover:bg-orange-600 disabled:opacity-50 flex items-center"
                 >
-                  {state.loading ? (
+                  {loading ? (
                     <>
                       <svg
                         className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
@@ -207,13 +227,13 @@ function DoctorRegistration() {
         </div>
 
         {/* Debug list */}
-        {state.doctors.length > 0 && (
+        {doctors.length > 0 && (
           <div className="mt-8 bg-white rounded-2xl shadow-lg p-6">
             <h3 className="text-xl font-bold mb-4">
-              Registered Doctors ({state.doctors.length})
+              Registered Doctors ({doctors.length})
             </h3>
             <div className="space-y-3">
-              {state.doctors.map((d) => (
+              {doctors.map((d) => (
                 <div key={d.id} className="bg-gray-50 p-3 rounded">
                   Dr. {d.personalInfo.firstName} {d.personalInfo.lastName} -{" "}
                   {d.professionalInfo.specialty} ({d.status})
