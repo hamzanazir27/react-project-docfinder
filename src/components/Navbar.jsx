@@ -14,13 +14,16 @@ import {
   LogOut,
   Shield,
   Bell,
+  Menu,
+  X,
 } from "lucide-react";
 
-// Updated Navbar Component
+// Updated Navbar Component with Mobile Responsiveness
 function Navbar() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [showProfileDropdown, setShowProfileDropdown] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   return (
     <>
@@ -29,34 +32,72 @@ function Navbar() {
           <div className="flex items-center justify-between h-16">
             {/* Logo */}
             <div className="flex items-center space-x-3">
-              <div className="w-10 h-10 bg-[#EF873D] rounded-full flex items-center justify-center shadow-md text-white">
+              <div className="w-8 h-8 sm:w-10 sm:h-10 bg-[#EF873D] rounded-full flex items-center justify-center shadow-md text-white">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
-                  width="32"
-                  height="32"
-                  className="fill-current text-white-500"
+                  width="24"
+                  height="24"
+                  className="sm:w-8 sm:h-8 fill-current text-white-500"
                   viewBox="0 0 256 256"
                 >
                   <path d="M216,88H168V40a16,16,0,0,0-16-16H104A16,16,0,0,0,88,40V88H40a16,16,0,0,0-16,16v48a16,16,0,0,0,16,16H88v48a16,16,0,0,0,16,16h48a16,16,0,0,0,16-16V168h48a16,16,0,0,0,16-16V104A16,16,0,0,0,216,88Zm0,64H160a8,8,0,0,0-8,8v56H104V160a8,8,0,0,0-8-8H40V104H96a8,8,0,0,0,8-8V40h48V96a8,8,0,0,0,8,8h56Z"></path>
                 </svg>
               </div>
-              <span className="text-gray-800 font-bold text-xl">DocFinder</span>
+              <span className="text-gray-800 font-bold text-lg sm:text-xl">
+                DocFinder
+              </span>
             </div>
 
-            {/* Links */}
-            <Links
-              logedin={isLoggedIn}
-              onAuthClick={() => setShowAuthModal(true)}
-              onProfileClick={() =>
-                setShowProfileDropdown(!showProfileDropdown)
-              }
-              showProfileDropdown={showProfileDropdown}
-              onLogout={() => {
-                setIsLoggedIn(false);
-                setShowProfileDropdown(false);
-              }}
-            />
+            {/* Desktop Navigation */}
+            <div className="hidden lg:block">
+              <Links
+                logedin={isLoggedIn}
+                onAuthClick={() => setShowAuthModal(true)}
+                onProfileClick={() =>
+                  setShowProfileDropdown(!showProfileDropdown)
+                }
+                showProfileDropdown={showProfileDropdown}
+                onLogout={() => {
+                  setIsLoggedIn(false);
+                  setShowProfileDropdown(false);
+                }}
+              />
+            </div>
+
+            {/* Mobile menu button */}
+            <div className="lg:hidden">
+              <button
+                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                className="text-gray-600 hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-[#EF873D] rounded-lg p-2"
+              >
+                {mobileMenuOpen ? (
+                  <X className="w-6 h-6" />
+                ) : (
+                  <Menu className="w-6 h-6" />
+                )}
+              </button>
+            </div>
           </div>
+
+          {/* Mobile menu */}
+          {mobileMenuOpen && (
+            <div className="lg:hidden">
+              <div className="px-2 pt-2 pb-3 space-y-1 bg-white/90 backdrop-blur-lg rounded-lg mt-2 shadow-lg">
+                <MobileLinks
+                  logedin={isLoggedIn}
+                  onAuthClick={() => {
+                    setShowAuthModal(true);
+                    setMobileMenuOpen(false);
+                  }}
+                  onLogout={() => {
+                    setIsLoggedIn(false);
+                    setMobileMenuOpen(false);
+                  }}
+                  closeMobileMenu={() => setMobileMenuOpen(false)}
+                />
+              </div>
+            </div>
+          )}
         </div>
       </nav>
 
@@ -74,6 +115,7 @@ function Navbar() {
   );
 }
 
+// Desktop Links Component
 function Links({
   logedin,
   onAuthClick,
@@ -189,7 +231,102 @@ function Links({
   );
 }
 
-// Auth Modal Component
+// Mobile Links Component
+function MobileLinks({ logedin, onAuthClick, onLogout, closeMobileMenu }) {
+  const mobileNavLinkClass =
+    "block px-3 py-2 rounded-lg text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50 transition-colors";
+
+  return (
+    <div className="space-y-1">
+      <a href="/" className={mobileNavLinkClass} onClick={closeMobileMenu}>
+        Home
+      </a>
+      <a
+        href="/finddoctor"
+        className={mobileNavLinkClass}
+        onClick={closeMobileMenu}
+      >
+        Find Doctor
+      </a>
+      <a
+        href="/docterregistration"
+        className={mobileNavLinkClass}
+        onClick={closeMobileMenu}
+      >
+        Register as Doctor
+      </a>
+      <a href="/about" className={mobileNavLinkClass} onClick={closeMobileMenu}>
+        About
+      </a>
+      <a
+        href="/contact"
+        className={mobileNavLinkClass}
+        onClick={closeMobileMenu}
+      >
+        Contact
+      </a>
+
+      {/* Auth Section */}
+      <div className="pt-4 border-t border-gray-200">
+        {logedin ? (
+          <div className="space-y-1">
+            <div className="flex items-center px-3 py-2">
+              <img
+                src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=32&h=32&fit=crop&crop=face"
+                alt="Profile"
+                className="w-8 h-8 rounded-full object-cover mr-3"
+              />
+              <div>
+                <p className="text-sm font-medium text-gray-900">John Doe</p>
+                <p className="text-xs text-gray-500">john.doe@email.com</p>
+              </div>
+            </div>
+            <a
+              href="#"
+              className={mobileNavLinkClass}
+              onClick={closeMobileMenu}
+            >
+              <User className="w-4 h-4 inline mr-3" />
+              View Profile
+            </a>
+            <a
+              href="#"
+              className={mobileNavLinkClass}
+              onClick={closeMobileMenu}
+            >
+              <Settings className="w-4 h-4 inline mr-3" />
+              Account Settings
+            </a>
+            <a
+              href="#"
+              className={mobileNavLinkClass}
+              onClick={closeMobileMenu}
+            >
+              <Bell className="w-4 h-4 inline mr-3" />
+              Notifications
+            </a>
+            <button
+              onClick={onLogout}
+              className="block w-full text-left px-3 py-2 rounded-lg text-base font-medium text-red-600 hover:bg-red-50 transition-colors"
+            >
+              <LogOut className="w-4 h-4 inline mr-3" />
+              Sign Out
+            </button>
+          </div>
+        ) : (
+          <button
+            onClick={onAuthClick}
+            className="w-full bg-[#1E90FF] text-white px-3 py-2 rounded-lg font-medium hover:opacity-90 transition-all duration-300"
+          >
+            Login / Signup
+          </button>
+        )}
+      </div>
+    </div>
+  );
+}
+
+// Auth Modal Component with Mobile Responsiveness
 function AuthModal({ onClose, onLogin }) {
   const [isLogin, setIsLogin] = useState(true);
   const [showPassword, setShowPassword] = useState(false);
@@ -211,31 +348,30 @@ function AuthModal({ onClose, onLogin }) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Handle authentication logic here
     onLogin();
   };
 
   return (
     <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
       <div className="bg-white rounded-3xl shadow-2xl max-w-md w-full max-h-[90vh] overflow-y-auto">
-        <div className="p-8">
+        <div className="p-6 sm:p-8">
           {/* Header */}
-          <div className="text-center mb-8">
-            <div className="w-16 h-16 bg-[#EF873D] rounded-full flex items-center justify-center mx-auto mb-4">
+          <div className="text-center mb-6 sm:mb-8">
+            <div className="w-12 h-12 sm:w-16 sm:h-16 bg-[#EF873D] rounded-full flex items-center justify-center mx-auto mb-4">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                width="32"
-                height="32"
-                className="fill-current text-white"
+                width="24"
+                height="24"
+                className="sm:w-8 sm:h-8 fill-current text-white"
                 viewBox="0 0 256 256"
               >
                 <path d="M216,88H168V40a16,16,0,0,0-16-16H104A16,16,0,0,0,88,40V88H40a16,16,0,0,0-16,16v48a16,16,0,0,0,16,16H88v48a16,16,0,0,0,16,16h48a16,16,0,0,0,16-16V168h48a16,16,0,0,0,16-16V104A16,16,0,0,0,216,88Zm0,64H160a8,8,0,0,0-8,8v56H104V160a8,8,0,0,0-8-8H40V104H96a8,8,0,0,0,8-8V40h48V96a8,8,0,0,0,8,8h56Z"></path>
               </svg>
             </div>
-            <h2 className="text-3xl font-bold text-gray-900">
+            <h2 className="text-2xl sm:text-3xl font-bold text-gray-900">
               {isLogin ? "Welcome Back" : "Create Account"}
             </h2>
-            <p className="text-gray-600 mt-2">
+            <p className="text-gray-600 mt-2 text-sm sm:text-base">
               {isLogin
                 ? "Sign in to access your healthcare dashboard"
                 : "Join DocFinder to find the best doctors"}
@@ -243,10 +379,10 @@ function AuthModal({ onClose, onLogin }) {
           </div>
 
           {/* Toggle Buttons */}
-          <div className="flex bg-gray-100 rounded-xl p-1 mb-8">
+          <div className="flex bg-gray-100 rounded-xl p-1 mb-6 sm:mb-8">
             <button
               onClick={() => setIsLogin(true)}
-              className={`flex-1 py-3 px-4 rounded-lg font-medium transition-all ${
+              className={`flex-1 py-2 sm:py-3 px-3 sm:px-4 rounded-lg font-medium transition-all text-sm sm:text-base ${
                 isLogin
                   ? "bg-white text-gray-900 shadow-sm"
                   : "text-gray-500 hover:text-gray-700"
@@ -256,7 +392,7 @@ function AuthModal({ onClose, onLogin }) {
             </button>
             <button
               onClick={() => setIsLogin(false)}
-              className={`flex-1 py-3 px-4 rounded-lg font-medium transition-all ${
+              className={`flex-1 py-2 sm:py-3 px-3 sm:px-4 rounded-lg font-medium transition-all text-sm sm:text-base ${
                 !isLogin
                   ? "bg-white text-gray-900 shadow-sm"
                   : "text-gray-500 hover:text-gray-700"
@@ -267,21 +403,21 @@ function AuthModal({ onClose, onLogin }) {
           </div>
 
           {/* Form */}
-          <div className="space-y-6">
+          <div className="space-y-4 sm:space-y-6">
             {!isLogin && (
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
                     First Name
                   </label>
                   <div className="relative">
-                    <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+                    <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4 sm:w-5 sm:h-5" />
                     <input
                       type="text"
                       name="firstName"
                       value={formData.firstName}
                       onChange={handleInputChange}
-                      className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#EF873D] focus:border-transparent"
+                      className="w-full pl-10 pr-4 py-2.5 sm:py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#EF873D] focus:border-transparent text-sm sm:text-base"
                       placeholder="John"
                     />
                   </div>
@@ -291,13 +427,13 @@ function AuthModal({ onClose, onLogin }) {
                     Last Name
                   </label>
                   <div className="relative">
-                    <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+                    <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4 sm:w-5 sm:h-5" />
                     <input
                       type="text"
                       name="lastName"
                       value={formData.lastName}
                       onChange={handleInputChange}
-                      className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#EF873D] focus:border-transparent"
+                      className="w-full pl-10 pr-4 py-2.5 sm:py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#EF873D] focus:border-transparent text-sm sm:text-base"
                       placeholder="Doe"
                     />
                   </div>
@@ -310,13 +446,13 @@ function AuthModal({ onClose, onLogin }) {
                 Email Address
               </label>
               <div className="relative">
-                <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+                <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4 sm:w-5 sm:h-5" />
                 <input
                   type="email"
                   name="email"
                   value={formData.email}
                   onChange={handleInputChange}
-                  className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#EF873D] focus:border-transparent"
+                  className="w-full pl-10 pr-4 py-2.5 sm:py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#EF873D] focus:border-transparent text-sm sm:text-base"
                   placeholder="your.email@example.com"
                 />
               </div>
@@ -328,13 +464,13 @@ function AuthModal({ onClose, onLogin }) {
                   Phone Number
                 </label>
                 <div className="relative">
-                  <Phone className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+                  <Phone className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4 sm:w-5 sm:h-5" />
                   <input
                     type="tel"
                     name="phone"
                     value={formData.phone}
                     onChange={handleInputChange}
-                    className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#EF873D] focus:border-transparent"
+                    className="w-full pl-10 pr-4 py-2.5 sm:py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#EF873D] focus:border-transparent text-sm sm:text-base"
                     placeholder="+358 XX XXX XXXX"
                   />
                 </div>
@@ -346,13 +482,13 @@ function AuthModal({ onClose, onLogin }) {
                 Password
               </label>
               <div className="relative">
-                <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+                <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4 sm:w-5 sm:h-5" />
                 <input
                   type={showPassword ? "text" : "password"}
                   name="password"
                   value={formData.password}
                   onChange={handleInputChange}
-                  className="w-full pl-10 pr-12 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#EF873D] focus:border-transparent"
+                  className="w-full pl-10 pr-12 py-2.5 sm:py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#EF873D] focus:border-transparent text-sm sm:text-base"
                   placeholder="Enter your password"
                 />
                 <button
@@ -361,9 +497,9 @@ function AuthModal({ onClose, onLogin }) {
                   className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
                 >
                   {showPassword ? (
-                    <EyeOff className="w-5 h-5" />
+                    <EyeOff className="w-4 h-4 sm:w-5 sm:h-5" />
                   ) : (
-                    <Eye className="w-5 h-5" />
+                    <Eye className="w-4 h-4 sm:w-5 sm:h-5" />
                   )}
                 </button>
               </div>
@@ -375,13 +511,13 @@ function AuthModal({ onClose, onLogin }) {
                   Confirm Password
                 </label>
                 <div className="relative">
-                  <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+                  <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4 sm:w-5 sm:h-5" />
                   <input
                     type="password"
                     name="confirmPassword"
                     value={formData.confirmPassword}
                     onChange={handleInputChange}
-                    className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#EF873D] focus:border-transparent"
+                    className="w-full pl-10 pr-4 py-2.5 sm:py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#EF873D] focus:border-transparent text-sm sm:text-base"
                     placeholder="Confirm your password"
                   />
                 </div>
@@ -410,7 +546,7 @@ function AuthModal({ onClose, onLogin }) {
 
             <button
               onClick={handleSubmit}
-              className="w-full bg-[#EF873D] text-white py-3 px-4 rounded-xl font-medium hover:bg-[#d67329] transition-colors shadow-lg"
+              className="w-full bg-[#EF873D] text-white py-2.5 sm:py-3 px-4 rounded-xl font-medium hover:bg-[#d67329] transition-colors shadow-lg text-sm sm:text-base"
             >
               {isLogin ? "Sign In" : "Create Account"}
             </button>
@@ -432,7 +568,7 @@ function AuthModal({ onClose, onLogin }) {
           </div>
 
           {/* Social Login */}
-          <div className="mt-8">
+          <div className="mt-6 sm:mt-8">
             <div className="relative">
               <div className="absolute inset-0 flex items-center">
                 <div className="w-full border-t border-gray-200" />
@@ -444,9 +580,12 @@ function AuthModal({ onClose, onLogin }) {
               </div>
             </div>
 
-            <div className="mt-6 grid grid-cols-2 gap-3">
-              <button className="w-full inline-flex justify-center py-3 px-4 rounded-xl border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 transition-colors">
-                <svg className="w-5 h-5 text-blue-600" viewBox="0 0 24 24">
+            <div className="mt-4 sm:mt-6 grid grid-cols-2 gap-3">
+              <button className="w-full inline-flex justify-center py-2.5 sm:py-3 px-4 rounded-xl border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 transition-colors">
+                <svg
+                  className="w-4 h-4 sm:w-5 sm:h-5 text-blue-600"
+                  viewBox="0 0 24 24"
+                >
                   <path
                     fill="currentColor"
                     d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
@@ -464,17 +603,20 @@ function AuthModal({ onClose, onLogin }) {
                     d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
                   />
                 </svg>
-                <span className="ml-2">Google</span>
+                <span className="ml-2 text-xs sm:text-sm">Google</span>
               </button>
 
-              <button className="w-full inline-flex justify-center py-3 px-4 rounded-xl border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 transition-colors">
-                <svg className="w-5 h-5 text-blue-600" viewBox="0 0 24 24">
+              <button className="w-full inline-flex justify-center py-2.5 sm:py-3 px-4 rounded-xl border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 transition-colors">
+                <svg
+                  className="w-4 h-4 sm:w-5 sm:h-5 text-blue-600"
+                  viewBox="0 0 24 24"
+                >
                   <path
                     fill="currentColor"
                     d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"
                   />
                 </svg>
-                <span className="ml-2">Facebook</span>
+                <span className="ml-2 text-xs sm:text-sm">Facebook</span>
               </button>
             </div>
           </div>
@@ -484,19 +626,7 @@ function AuthModal({ onClose, onLogin }) {
             onClick={onClose}
             className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 transition-colors"
           >
-            <svg
-              className="w-6 h-6"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M6 18L18 6M6 6l12 12"
-              />
-            </svg>
+            <X className="w-5 h-5 sm:w-6 sm:h-6" />
           </button>
         </div>
       </div>
@@ -504,7 +634,7 @@ function AuthModal({ onClose, onLogin }) {
   );
 }
 
-// Profile Page Component
+// Profile Page Component with Mobile Responsiveness
 function ProfilePage() {
   const [activeTab, setActiveTab] = useState("personal");
   const [isEditing, setIsEditing] = useState(false);
@@ -529,40 +659,44 @@ function ProfilePage() {
   };
 
   const tabs = [
-    { id: "personal", label: "Personal Info", icon: User },
-    { id: "medical", label: "Medical Info", icon: Shield },
+    { id: "personal", label: "Personal", icon: User },
+    { id: "medical", label: "Medical", icon: Shield },
     { id: "appointments", label: "Appointments", icon: Calendar },
     { id: "settings", label: "Settings", icon: Settings },
   ];
 
   return (
     <div className="min-h-screen bg-gray-50 pt-16">
-      <div className="max-w-6xl mx-auto px-4 py-8">
+      <div className="max-w-6xl mx-auto px-4 py-4 sm:py-8">
         {/* Profile Header */}
-        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-8 mb-8">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-6">
+        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-4 sm:p-8 mb-4 sm:mb-8">
+          <div className="flex flex-col sm:flex-row items-center sm:justify-between space-y-4 sm:space-y-0">
+            <div className="flex flex-col sm:flex-row items-center space-y-4 sm:space-y-0 sm:space-x-6 text-center sm:text-left">
               <div className="relative">
                 <img
                   src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop&crop=face"
                   alt="Profile"
-                  className="w-24 h-24 rounded-full object-cover border-4 border-white shadow-lg"
+                  className="w-20 h-20 sm:w-24 sm:h-24 rounded-full object-cover border-4 border-white shadow-lg"
                 />
-                <button className="absolute bottom-0 right-0 bg-[#EF873D] text-white p-2 rounded-full shadow-lg hover:bg-[#d67329] transition-colors">
-                  <Camera className="w-4 h-4" />
+                <button className="absolute bottom-0 right-0 bg-[#EF873D] text-white p-1.5 sm:p-2 rounded-full shadow-lg hover:bg-[#d67329] transition-colors">
+                  <Camera className="w-3 h-3 sm:w-4 sm:h-4" />
                 </button>
               </div>
               <div>
-                <h1 className="text-3xl font-bold text-gray-900">
+                <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">
                   {profileData.firstName} {profileData.lastName}
                 </h1>
-                <p className="text-gray-600">{profileData.email}</p>
-                <p className="text-sm text-gray-500">Member since March 2023</p>
+                <p className="text-gray-600 text-sm sm:text-base">
+                  {profileData.email}
+                </p>
+                <p className="text-xs sm:text-sm text-gray-500">
+                  Member since March 2023
+                </p>
               </div>
             </div>
             <button
               onClick={() => setIsEditing(!isEditing)}
-              className="bg-[#EF873D] text-white px-6 py-2 rounded-lg font-medium hover:bg-[#d67329] transition-colors flex items-center space-x-2"
+              className="bg-[#EF873D] text-white px-4 sm:px-6 py-2 rounded-lg font-medium hover:bg-[#d67329] transition-colors flex items-center space-x-2 text-sm sm:text-base"
             >
               <Edit className="w-4 h-4" />
               <span>{isEditing ? "Save Changes" : "Edit Profile"}</span>
@@ -572,32 +706,48 @@ function ProfilePage() {
 
         {/* Tabs */}
         <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
-          <div className="border-b border-gray-200">
-            <div className="flex">
+          {/* Mobile Tab Navigation */}
+          <div className="sm:hidden">
+            <select
+              value={activeTab}
+              onChange={(e) => setActiveTab(e.target.value)}
+              className="w-full p-4 bg-white border-b border-gray-200 focus:outline-none focus:ring-2 focus:ring-[#EF873D] text-gray-700 font-medium"
+            >
+              {tabs.map((tab) => (
+                <option key={tab.id} value={tab.id}>
+                  {tab.label}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          {/* Desktop Tab Navigation */}
+          <div className="hidden sm:block border-b border-gray-200">
+            <div className="flex overflow-x-auto">
               {tabs.map((tab) => (
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
-                  className={`flex items-center space-x-2 px-6 py-4 font-medium transition-colors ${
+                  className={`flex items-center space-x-2 px-4 lg:px-6 py-4 font-medium transition-colors whitespace-nowrap ${
                     activeTab === tab.id
                       ? "bg-[#EF873D] text-white"
                       : "text-gray-600 hover:text-gray-900 hover:bg-gray-50"
                   }`}
                 >
-                  <tab.icon className="w-5 h-5" />
-                  <span>{tab.label}</span>
+                  <tab.icon className="w-4 h-4 sm:w-5 sm:h-5" />
+                  <span className="text-sm sm:text-base">{tab.label}</span>
                 </button>
               ))}
             </div>
           </div>
 
-          <div className="p-8">
+          <div className="p-4 sm:p-8">
             {activeTab === "personal" && (
-              <div className="space-y-6">
-                <h2 className="text-2xl font-bold text-gray-900 mb-6">
+              <div className="space-y-4 sm:space-y-6">
+                <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-4 sm:mb-6">
                   Personal Information
                 </h2>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
                       First Name
@@ -608,7 +758,7 @@ function ProfilePage() {
                       value={profileData.firstName}
                       onChange={handleInputChange}
                       disabled={!isEditing}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#EF873D] focus:border-transparent disabled:bg-gray-50"
+                      className="w-full px-3 sm:px-4 py-2.5 sm:py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#EF873D] focus:border-transparent disabled:bg-gray-50 text-sm sm:text-base"
                     />
                   </div>
                   <div>
@@ -621,7 +771,7 @@ function ProfilePage() {
                       value={profileData.lastName}
                       onChange={handleInputChange}
                       disabled={!isEditing}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#EF873D] focus:border-transparent disabled:bg-gray-50"
+                      className="w-full px-3 sm:px-4 py-2.5 sm:py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#EF873D] focus:border-transparent disabled:bg-gray-50 text-sm sm:text-base"
                     />
                   </div>
                   <div>
@@ -634,7 +784,7 @@ function ProfilePage() {
                       value={profileData.email}
                       onChange={handleInputChange}
                       disabled={!isEditing}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#EF873D] focus:border-transparent disabled:bg-gray-50"
+                      className="w-full px-3 sm:px-4 py-2.5 sm:py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#EF873D] focus:border-transparent disabled:bg-gray-50 text-sm sm:text-base"
                     />
                   </div>
                   <div>
@@ -647,7 +797,7 @@ function ProfilePage() {
                       value={profileData.phone}
                       onChange={handleInputChange}
                       disabled={!isEditing}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#EF873D] focus:border-transparent disabled:bg-gray-50"
+                      className="w-full px-3 sm:px-4 py-2.5 sm:py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#EF873D] focus:border-transparent disabled:bg-gray-50 text-sm sm:text-base"
                     />
                   </div>
                   <div>
@@ -660,7 +810,7 @@ function ProfilePage() {
                       value={profileData.dateOfBirth}
                       onChange={handleInputChange}
                       disabled={!isEditing}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#EF873D] focus:border-transparent disabled:bg-gray-50"
+                      className="w-full px-3 sm:px-4 py-2.5 sm:py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#EF873D] focus:border-transparent disabled:bg-gray-50 text-sm sm:text-base"
                     />
                   </div>
                   <div>
@@ -673,7 +823,20 @@ function ProfilePage() {
                       value={profileData.emergencyContact}
                       onChange={handleInputChange}
                       disabled={!isEditing}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#EF873D] focus:border-transparent disabled:bg-gray-50"
+                      className="w-full px-3 sm:px-4 py-2.5 sm:py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#EF873D] focus:border-transparent disabled:bg-gray-50 text-sm sm:text-base"
+                    />
+                  </div>
+                  <div className="lg:col-span-2">
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Address
+                    </label>
+                    <input
+                      type="text"
+                      name="address"
+                      value={profileData.address}
+                      onChange={handleInputChange}
+                      disabled={!isEditing}
+                      className="w-full px-3 sm:px-4 py-2.5 sm:py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#EF873D] focus:border-transparent disabled:bg-gray-50 text-sm sm:text-base"
                     />
                   </div>
                 </div>
@@ -681,11 +844,11 @@ function ProfilePage() {
             )}
 
             {activeTab === "medical" && (
-              <div className="space-y-6">
-                <h2 className="text-2xl font-bold text-gray-900 mb-6">
+              <div className="space-y-4 sm:space-y-6">
+                <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-4 sm:mb-6">
                   Medical Information
                 </h2>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
                       Blood Type
@@ -696,7 +859,7 @@ function ProfilePage() {
                       value={profileData.bloodType}
                       onChange={handleInputChange}
                       disabled={!isEditing}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#EF873D] focus:border-transparent disabled:bg-gray-50"
+                      className="w-full px-3 sm:px-4 py-2.5 sm:py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#EF873D] focus:border-transparent disabled:bg-gray-50 text-sm sm:text-base"
                     />
                   </div>
                   <div>
@@ -709,20 +872,21 @@ function ProfilePage() {
                       value={profileData.allergies}
                       onChange={handleInputChange}
                       disabled={!isEditing}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#EF873D] focus:border-transparent disabled:bg-gray-50"
+                      className="w-full px-3 sm:px-4 py-2.5 sm:py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#EF873D] focus:border-transparent disabled:bg-gray-50 text-sm sm:text-base"
                     />
                   </div>
-                  <div>
+                  <div className="lg:col-span-2">
                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Medications
+                      Current Medications
                     </label>
-                    <input
-                      type="text"
+                    <textarea
                       name="medications"
                       value={profileData.medications}
                       onChange={handleInputChange}
                       disabled={!isEditing}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#EF873D] focus:border-transparent disabled:bg-gray-50"
+                      rows="3"
+                      className="w-full px-3 sm:px-4 py-2.5 sm:py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#EF873D] focus:border-transparent disabled:bg-gray-50 text-sm sm:text-base resize-none"
+                      placeholder="List any current medications..."
                     />
                   </div>
                 </div>
@@ -730,24 +894,89 @@ function ProfilePage() {
             )}
 
             {activeTab === "appointments" && (
-              <div>
-                <h2 className="text-2xl font-bold text-gray-900 mb-6">
+              <div className="space-y-4 sm:space-y-6">
+                <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-4 sm:mb-6">
                   Appointments
                 </h2>
-                <p className="text-gray-600">
-                  Your upcoming and past appointments will appear here.
-                </p>
+                <div className="text-center py-8 sm:py-12">
+                  <Calendar className="w-12 h-12 sm:w-16 sm:h-16 text-gray-400 mx-auto mb-4" />
+                  <p className="text-gray-600 text-sm sm:text-base">
+                    Your upcoming and past appointments will appear here.
+                  </p>
+                  <button className="mt-4 bg-[#EF873D] text-white px-4 sm:px-6 py-2 rounded-lg font-medium hover:bg-[#d67329] transition-colors text-sm sm:text-base">
+                    Book New Appointment
+                  </button>
+                </div>
               </div>
             )}
 
             {activeTab === "settings" && (
-              <div>
-                <h2 className="text-2xl font-bold text-gray-900 mb-6">
+              <div className="space-y-4 sm:space-y-6">
+                <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-4 sm:mb-6">
                   Account Settings
                 </h2>
-                <p className="text-gray-600">
-                  Update your preferences, password, and security settings.
-                </p>
+                <div className="space-y-4">
+                  <div className="bg-gray-50 p-4 sm:p-6 rounded-lg">
+                    <h3 className="text-base sm:text-lg font-medium text-gray-900 mb-2">
+                      Notifications
+                    </h3>
+                    <p className="text-sm sm:text-base text-gray-600 mb-4">
+                      Manage how you receive notifications about appointments
+                      and updates.
+                    </p>
+                    <div className="space-y-3">
+                      <label className="flex items-center">
+                        <input
+                          type="checkbox"
+                          className="rounded border-gray-300 text-[#EF873D] focus:ring-[#EF873D]"
+                          defaultChecked
+                        />
+                        <span className="ml-2 text-sm sm:text-base text-gray-700">
+                          Email notifications
+                        </span>
+                      </label>
+                      <label className="flex items-center">
+                        <input
+                          type="checkbox"
+                          className="rounded border-gray-300 text-[#EF873D] focus:ring-[#EF873D]"
+                        />
+                        <span className="ml-2 text-sm sm:text-base text-gray-700">
+                          SMS notifications
+                        </span>
+                      </label>
+                    </div>
+                  </div>
+
+                  <div className="bg-gray-50 p-4 sm:p-6 rounded-lg">
+                    <h3 className="text-base sm:text-lg font-medium text-gray-900 mb-2">
+                      Privacy & Security
+                    </h3>
+                    <p className="text-sm sm:text-base text-gray-600 mb-4">
+                      Manage your privacy and security settings.
+                    </p>
+                    <div className="space-y-2">
+                      <button className="w-full sm:w-auto text-left bg-white px-4 py-2 rounded-lg border border-gray-300 hover:bg-gray-50 transition-colors text-sm sm:text-base">
+                        Change Password
+                      </button>
+                      <button className="w-full sm:w-auto text-left bg-white px-4 py-2 rounded-lg border border-gray-300 hover:bg-gray-50 transition-colors text-sm sm:text-base sm:ml-2">
+                        Two-Factor Authentication
+                      </button>
+                    </div>
+                  </div>
+
+                  <div className="bg-red-50 p-4 sm:p-6 rounded-lg border border-red-200">
+                    <h3 className="text-base sm:text-lg font-medium text-red-900 mb-2">
+                      Danger Zone
+                    </h3>
+                    <p className="text-sm sm:text-base text-red-700 mb-4">
+                      Once you delete your account, there is no going back.
+                      Please be certain.
+                    </p>
+                    <button className="bg-red-600 text-white px-4 py-2 rounded-lg font-medium hover:bg-red-700 transition-colors text-sm sm:text-base">
+                      Delete Account
+                    </button>
+                  </div>
+                </div>
               </div>
             )}
           </div>
@@ -761,4 +990,4 @@ function ProfilePage() {
 export default Navbar;
 
 // Optional: export ProfilePage for routing purposes
-export { ProfilePage };
+// export { ProfilePage }

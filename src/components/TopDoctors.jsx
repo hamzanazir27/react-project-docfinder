@@ -10,7 +10,7 @@ function TopDoctors() {
       reviews: 120,
       description: "Specialist in heart and vascular care",
       image:
-        "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80",
+        "https://img.freepik.com/free-photo/young-handsome-physician-medical-robe-with-stethoscope_1303-17823.jpg",
       imageLeft: true,
     },
     {
@@ -22,7 +22,7 @@ function TopDoctors() {
       reviews: 200,
       description: "Expert in cosmetic dentistry",
       image:
-        "https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80",
+        "https://img.freepik.com/free-photo/doctor-examines-patient-medicine-health-care-concept_1328-3144.jpg",
       imageLeft: false,
     },
     {
@@ -34,7 +34,7 @@ function TopDoctors() {
       reviews: 150,
       description: "Caring for children's health & wellness",
       image:
-        "https://images.unsplash.com/photo-1618498082410-b4aa22193b38?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MzJ8fGRvY3RvcnN8ZW58MHwwfDB8fHww",
+        "https://img.freepik.com/free-photo/smiling-young-male-doctor-wearing-medical-robe-stethoscope-pointing-side-isolated-purple-wall-with-copy-space_141793-59915.jpg?semt=ais_hybrid&w=740&q=80",
       imageLeft: true,
     },
   ];
