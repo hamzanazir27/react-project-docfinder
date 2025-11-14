@@ -182,6 +182,121 @@ const FindDoctor = () => {
       services:
         "Skin cancer screening, Cosmetic procedures, Medical dermatology",
     },
+    {
+      id: 9,
+      name: "Dr. Antti Korhonen",
+      specialty: "Sports Orthopedic Surgeon",
+      city: "Espoo",
+      gender: "Male",
+      experience: "11+ years",
+      rating: 4.9,
+      reviews: 151,
+      description:
+        "Sports injury specialist helping athletes recover from ligament tears, joint damage, and performance-related injuries.",
+      image:
+        "https://images.unsplash.com/photo-1607746882042-944635dfe10e?w=150&h=150&fit=crop&crop=face",
+      consultationFee: "$150",
+      availableHours: "Mon-Fri: 9:00 AM - 5:00 PM",
+      languages: "Finnish, English",
+      achievements: "Sports Orthopedic Fellowship, 11+ years experience",
+      services: "Ligament repair, Joint treatment, Sports rehabilitation",
+    },
+    {
+      id: 10,
+      name: "Dr. Hanna Laine",
+      specialty: "Orthopedic Consultant",
+      city: "Vantaa",
+      gender: "Female",
+      experience: "13+ years",
+      rating: 4.7,
+      reviews: 110,
+      description:
+        "Dedicated orthopedic consultant focusing on spinal alignment, joint pain, and holistic rehabilitation.",
+      image:
+        "https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?w=150&h=150&fit=crop&crop=face",
+      consultationFee: "$140",
+      availableHours: "Mon-Fri: 8:00 AM - 4:00 PM",
+      languages: "Finnish, English",
+      achievements: "Certified Orthopedic Specialist, 13+ years experience",
+      services: "Spine therapy, Joint care, Orthopedic diagnostics",
+    },
+    {
+      id: 11,
+      name: "Dr. Petri Virtanen",
+      specialty: "Trauma Orthopedic Surgeon",
+      city: "Lahti",
+      gender: "Male",
+      experience: "14+ years",
+      rating: 4.9,
+      reviews: 124,
+      description:
+        "Experienced in trauma surgery and joint reconstruction, focusing on restoring full movement and strength.",
+      image:
+        "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=150&h=150&fit=crop&crop=face",
+      consultationFee: "$155",
+      availableHours: "Mon-Sat: 9:00 AM - 5:00 PM",
+      languages: "Finnish, English",
+      achievements: "Performed 500+ trauma surgeries successfully",
+      services:
+        "Fracture management, Bone reconstruction, Orthopedic trauma care",
+    },
+    {
+      id: 12,
+      name: "Dr. Elina Heikkinen",
+      specialty: "Spine Orthopedic Specialist",
+      city: "Kuopio",
+      gender: "Female",
+      experience: "8+ years",
+      rating: 4.6,
+      reviews: 94,
+      description:
+        "Orthopedic specialist focused on spinal disorders, posture correction, and rehabilitation programs.",
+      image:
+        "https://images.unsplash.com/photo-1544723795-3fb6469f5b39?w=150&h=150&fit=crop&crop=face",
+      consultationFee: "$125",
+      availableHours: "Mon-Fri: 10:00 AM - 6:00 PM",
+      languages: "Finnish, English",
+      achievements: "Certified in Spine Therapy and Orthopedic Care",
+      services: "Spinal treatment, Posture correction, Rehab therapy",
+    },
+    {
+      id: 13,
+      name: "Dr. Teemu Salminen",
+      specialty: "Sports Orthopedic Consultant",
+      city: "Jyväskylä",
+      gender: "Male",
+      experience: "10+ years",
+      rating: 4.8,
+      reviews: 102,
+      description:
+        "Specialist in sports-related orthopedic conditions, helping patients regain peak performance through targeted treatment.",
+      image:
+        "https://images.unsplash.com/photo-1607746882042-944635dfe10e?w=150&h=150&fit=crop&crop=face",
+      consultationFee: "$135",
+      availableHours: "Mon-Fri: 9:30 AM - 5:30 PM",
+      languages: "Finnish, English",
+      achievements: "Sports Medicine Certification, 10+ years experience",
+      services: "Sports therapy, Joint care, Rehabilitation planning",
+    },
+    {
+      id: 14,
+      name: "Dr. Laura Hämäläinen",
+      specialty: "Orthopedic Surgeon",
+      city: "Tampere",
+      gender: "Female",
+      experience: "12+ years",
+      rating: 4.9,
+      reviews: 135,
+      description:
+        "Orthopedic surgeon with extensive experience in fracture repair and joint replacement using advanced surgical techniques.",
+      image:
+        "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=150&h=150&fit=crop&crop=face",
+      consultationFee: "$145",
+      availableHours: "Mon-Fri: 8:30 AM - 4:30 PM",
+      languages: "Finnish, English, Swedish",
+      achievements: "Senior Orthopedic Surgeon, 12+ years experience",
+      services: "Fracture repair, Joint replacement, Orthopedic consultation",
+    },
   ];
 
   // Transform registered doctors to match the expected format
@@ -215,7 +330,7 @@ const FindDoctor = () => {
     setCurrentPage(1);
   };
 
-  const filteredDoctors = useMemo(() => {
+  /*   const filteredDoctors = useMemo(() => {
     return allDoctors.filter((doctor) => {
       const matchesSearch =
         searchTerm === "" ||
@@ -243,6 +358,81 @@ const FindDoctor = () => {
         (filters.rating === "4.5+ ★" && doctor.rating >= 4.5) ||
         (filters.rating === "4.8+ ★" && doctor.rating >= 4.8);
 
+      return (
+        matchesSearch &&
+        matchesCity &&
+        matchesSpecialty &&
+        matchesGender &&
+        matchesExperience &&
+        matchesRating
+      );
+    });
+  }, [allDoctors, searchTerm, filters]); */
+
+  // Extra keywords that should show Orthopedic doctors
+  const orthoKeywords = [
+    "accident",
+    "road accident",
+    "road traffic accident",
+    "traffic accident",
+    "trauma",
+    "fracture",
+    "bone",
+    "joint pain",
+    "leg injury",
+    "shoulder pain",
+    "back pain",
+    "knee pain",
+    "replacement",
+    "hip",
+    "joint",
+  ];
+
+  const filteredDoctors = useMemo(() => {
+    const lowerSearch = searchTerm.trim().toLowerCase();
+
+    return allDoctors.filter((doctor) => {
+      const doctorSpecialty = doctor.specialty.toLowerCase();
+      const doctorCity = doctor.city.toLowerCase();
+      const doctorGender = doctor.gender.toLowerCase();
+
+      // ✅ Incremental letter-based match for orthopedic keywords
+      const isOrthoKeyword = orthoKeywords.some((keyword) =>
+        keyword.toLowerCase().includes(lowerSearch)
+      );
+
+      // ✅ Main search logic
+      const matchesSearch =
+        lowerSearch === "" ||
+        doctor.name.toLowerCase().includes(lowerSearch) ||
+        doctorSpecialty.includes(lowerSearch) ||
+        doctorCity.includes(lowerSearch) ||
+        (isOrthoKeyword && doctorSpecialty.includes("ortho")); // match orthopedists
+
+      // ✅ Filters
+      const matchesCity =
+        filters.city === "All Cities" ||
+        doctorCity === filters.city.toLowerCase();
+
+      const matchesSpecialty =
+        filters.specialty === "All Specialties" ||
+        doctorSpecialty === filters.specialty.toLowerCase();
+
+      const matchesGender =
+        filters.gender === "All Genders" ||
+        doctorGender === filters.gender.toLowerCase();
+
+      const matchesExperience =
+        filters.experience === "Any Experience" ||
+        doctor.experience === filters.experience;
+
+      const matchesRating =
+        filters.rating === "Any Rating" ||
+        (filters.rating === "4+ ★" && doctor.rating >= 4) ||
+        (filters.rating === "4.5+ ★" && doctor.rating >= 4.5) ||
+        (filters.rating === "4.8+ ★" && doctor.rating >= 4.8);
+
+      // ✅ Return only doctors that match search + filters
       return (
         matchesSearch &&
         matchesCity &&
